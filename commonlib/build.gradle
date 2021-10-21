@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 
+group='com.github.Jaheo'
 android {
     compileSdk 30
 
