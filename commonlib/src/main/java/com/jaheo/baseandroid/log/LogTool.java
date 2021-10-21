@@ -2,12 +2,10 @@ package com.jaheo.baseandroid.log;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.experimental.Experimental;
-
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -35,7 +33,7 @@ public class LogTool {
 
     public static void initial(Context context) {
         logFileDir = context.getFilesDir() + File.separator + "LogMsg" + File.separator;
-        Logger.addLogAdapter(new AndroidLogAdapter());
+        // Logger.addLogAdapter(new AndroidLogAdapter());
         isInitial = true;
     }
 
@@ -51,23 +49,14 @@ public class LogTool {
         i(tag, content, false);
     }
 
-    public static void json( String content) {
-        json( content, false);
-    }
-
-    public static void xml(String content) {
-        xml(content, false);
-    }
-
-
     public static void e(String tag, String content, boolean save) {
         if (!isInitial) {
             throw new UnsupportedOperationException("LogTool.initial() first!");
         }
         if (tag == null) {
-            Logger.e(TAG, content);
+            Log.e(TAG, content);
         } else {
-            Logger.e(tag, content);
+            Log.e(tag, content);
         }
         if(save){
             write2File(content);
@@ -79,9 +68,9 @@ public class LogTool {
             throw new UnsupportedOperationException("LogTool.initial() first!");
         }
         if (tag == null) {
-            Logger.i(TAG, content);
+            Log.i(TAG, content);
         } else {
-            Logger.i(tag, content);
+            Log.i(tag, content);
         }
         if(save){
             write2File(content);
@@ -93,34 +82,15 @@ public class LogTool {
             throw new UnsupportedOperationException("LogTool.initial() first!");
         }
         if (tag == null) {
-            Logger.w(TAG, content);
+            Log.w(TAG, content);
         } else {
-            Logger.w(tag, content);
+            Log.w(tag, content);
         }
         if(save){
             write2File(content);
         }
     }
 
-    public static void json(String json, boolean save) {
-        if (!isInitial) {
-            throw new UnsupportedOperationException("LogTool.initial() first!");
-        }
-        Logger.json(json);
-        if(save){
-            write2File(json);
-        }
-    }
-
-    public static void xml(String xml, boolean save) {
-        if (!isInitial) {
-            throw new UnsupportedOperationException("LogTool.initial() first!");
-        }
-        Logger.xml(xml);
-        if(save){
-            write2File(xml);
-        }
-    }
 
     private static void write2File(String str) {
         SimpleDateFormat dateFormat = dataFormat.get();
