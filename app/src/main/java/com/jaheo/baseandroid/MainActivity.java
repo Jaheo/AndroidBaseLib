@@ -16,6 +16,11 @@ public class MainActivity extends AppCompatActivity {
 
         CrashHandler.getInstance().init(this);
         LogTool.initial(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogTool.e("tag","111111111111111");
     }
 }
