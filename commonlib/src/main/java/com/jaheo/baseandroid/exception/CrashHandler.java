@@ -16,8 +16,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Looper;
 import android.os.Process;
 import android.util.Log;
+import android.widget.Toast;
 
 public class CrashHandler implements UncaughtExceptionHandler {
     private static final String TAG = CrashHandler.class.getSimpleName();
@@ -70,6 +72,20 @@ public class CrashHandler implements UncaughtExceptionHandler {
         if (mDefaultCrashHandler != null) {
             mDefaultCrashHandler.uncaughtException(thread, ex);
         } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    Toast.makeText(mContext,"很抱歉,程序出现异常,即将退出",Toast.LENGTH_LONG).show();
+                    Looper.loop();
+                }
+            }.start();
+            try {
+                //给Toast留出时间
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             Process.killProcess(Process.myPid());
         }
 
