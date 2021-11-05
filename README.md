@@ -14,6 +14,6 @@ Some commonly used basic functional classes of android
 #### Step 2. Add the dependency
 ```
     dependencies {
-        implementation 'com.github.Jaheo:AndroidBaseLib:0.0.1'
+        implementation 'com.github.Jaheo:AndroidBaseLib:0.0.10'
     }
 ```
