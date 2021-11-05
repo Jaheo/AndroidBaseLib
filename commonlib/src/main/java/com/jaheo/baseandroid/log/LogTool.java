@@ -4,8 +4,10 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.experimental.Experimental;
+
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -24,7 +26,7 @@ public class LogTool {
     private static ThreadLocal<SimpleDateFormat> dataFormat = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyyMMdd", Locale.CHINA);
+            return new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
         }
     };
 
@@ -33,7 +35,6 @@ public class LogTool {
 
     public static void initial(Context context) {
         logFileDir = context.getFilesDir() + File.separator + "LogMsg" + File.separator;
-        // Logger.addLogAdapter(new AndroidLogAdapter());
         isInitial = true;
     }
 
@@ -53,13 +54,14 @@ public class LogTool {
         if (!isInitial) {
             throw new UnsupportedOperationException("LogTool.initial() first!");
         }
+        String moreMessage = getMoreMessage(content);
         if (tag == null) {
-            Log.e(TAG, content);
+            Log.e(TAG, moreMessage);
         } else {
-            Log.e(tag, content);
+            Log.e(tag, moreMessage);
         }
-        if(save){
-            write2File(content);
+        if (save) {
+            write2File(moreMessage);
         }
     }
 
@@ -67,13 +69,14 @@ public class LogTool {
         if (!isInitial) {
             throw new UnsupportedOperationException("LogTool.initial() first!");
         }
+        String moreMessage = getMoreMessage(content);
         if (tag == null) {
-            Log.i(TAG, content);
+            Log.i(TAG, moreMessage);
         } else {
-            Log.i(tag, content);
+            Log.i(tag, moreMessage);
         }
-        if(save){
-            write2File(content);
+        if (save) {
+            write2File(moreMessage);
         }
     }
 
@@ -81,16 +84,67 @@ public class LogTool {
         if (!isInitial) {
             throw new UnsupportedOperationException("LogTool.initial() first!");
         }
+        String moreMessage = getMoreMessage(content);
         if (tag == null) {
-            Log.w(TAG, content);
+            Log.w(TAG, moreMessage);
         } else {
-            Log.w(tag, content);
+            Log.w(tag, moreMessage);
         }
-        if(save){
-            write2File(content);
+        if (save) {
+            write2File(moreMessage);
         }
     }
 
+    /**
+     * 参考 orhanobut.logger ， 输出详细信息
+     *
+     * @param content 原始内容
+     * @return 详细信息
+     */
+    private static String getMoreMessage(String content) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("----------------START---------------");
+        builder.append("\r\n");
+        builder.append("Thread:");
+        builder.append(Thread.currentThread().getName());
+        // 当前线程的栈内元素
+        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+        int stackOffset = getStackOffset(trace);
+        int methodCount = 2;
+        if (methodCount + stackOffset > trace.length) {
+            methodCount = trace.length - stackOffset - 1;
+        }
+        for (int i = methodCount; i > 0; --i) {
+            int stackIndex = i + stackOffset;
+            if (stackIndex < trace.length) {
+                builder.append("\r\n");
+                builder.append(trace[stackIndex].getClassName()).append(".")
+                        .append(trace[stackIndex].getMethodName()).append(" ")
+                        .append(" (").append(trace[stackIndex].getFileName()).append(":")
+                        .append(trace[stackIndex].getLineNumber()).append(")");
+            }
+        }
+        builder.append("\r\n");
+        builder.append("message:").append(content);
+        builder.append("\r\n");
+        builder.append("----------------END---------------");
+        return builder.toString();
+    }
+
+
+    private static int getStackOffset(@NonNull StackTraceElement[] trace) {
+        // 方法 按照调用顺序入栈，理论上在栈内，位于本类的所有方法下，第一个方法就是调用LogTool的方法
+        // 本类的调用比较简单 e->e->getMoreMessage->getStackOffset，所以遍历五次，可以找到调用者方法
+        for (int i = 5; i < trace.length; ++i) {
+            StackTraceElement e = trace[i];
+            String name = e.getClassName();
+            if (!name.equals(LogTool.class.getName())) {
+                --i;
+                return i;
+            }
+        }
+        return -1;
+    }
 
     private static void write2File(String str) {
         SimpleDateFormat dateFormat = dataFormat.get();

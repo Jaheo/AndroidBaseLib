@@ -68,7 +68,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
         ex.printStackTrace();
         // 发生crash之后，需要将进程杀掉，因为此时程序不能继续往下运行，程序状态已不对
-        //如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
+        // 如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultCrashHandler != null) {
             mDefaultCrashHandler.uncaughtException(thread, ex);
         } else {
