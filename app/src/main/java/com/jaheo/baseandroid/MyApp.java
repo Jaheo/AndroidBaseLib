@@ -10,7 +10,7 @@ public class MyApp  extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        CrashHandler.getInstance().init(this);
         LogTool.initial(this);
+        CrashHandler.getInstance().init(this);
     }
 }

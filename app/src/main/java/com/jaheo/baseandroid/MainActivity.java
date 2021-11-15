@@ -1,6 +1,10 @@
 package com.jaheo.baseandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviderKt;
 
 import android.os.Bundle;
 import android.view.View;

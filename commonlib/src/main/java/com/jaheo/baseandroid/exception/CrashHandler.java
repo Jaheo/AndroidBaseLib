@@ -21,6 +21,8 @@ import android.os.Process;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.jaheo.baseandroid.R;
+
 public class CrashHandler implements UncaughtExceptionHandler {
     private static final String TAG = CrashHandler.class.getSimpleName();
     private static final boolean DEBUG = true;
@@ -57,39 +59,38 @@ public class CrashHandler implements UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+        ex.printStackTrace();
         try {
             //导出异常信息到SD卡中
             dumpExceptionToSDCard(ex);
+            //这里可以通过网络上传异常信息到服务器（完成下面的方法uploadExceptionToServer）
             uploadExceptionToServer();
-            //这里可以通过网络上传异常信息到服务器（完成下面的方法uploadExceptionToServer），便于开发人员分析日志从而解决bug
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        ex.printStackTrace();
+        new Thread() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                Toast.makeText(mContext, R.string.unknown_error,Toast.LENGTH_LONG).show();
+                Looper.loop();
+            }
+        }.start();
+        try {
+            //给Toast留出时间
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // 发生crash之后，需要将进程杀掉，因为此时程序不能继续往下运行，程序状态已不对
         // 如果系统提供了默认的异常处理器，则交给系统去结束我们的程序，否则就由我们自己结束自己
         if (mDefaultCrashHandler != null) {
             mDefaultCrashHandler.uncaughtException(thread, ex);
         } else {
-            new Thread() {
-                @Override
-                public void run() {
-                    Looper.prepare();
-                    Toast.makeText(mContext,"很抱歉,程序出现异常,即将退出",Toast.LENGTH_LONG).show();
-                    Looper.loop();
-                }
-            }.start();
-            try {
-                //给Toast留出时间
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             Process.killProcess(Process.myPid());
         }
-
     }
+
 
     private void dumpExceptionToSDCard(Throwable ex) throws IOException {
         // 写到 app 私有空间
@@ -114,6 +115,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             Log.e(TAG, "dump crash info failed");
         }
     }
+
 
     private void dumpPhoneInfo(PrintWriter pw) throws NameNotFoundException {
         PackageManager pm = mContext.getPackageManager();
@@ -141,6 +143,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         pw.print("CPU ABI: ");
         pw.println(Build.CPU_ABI);
     }
+
 
     private void uploadExceptionToServer() { // 上传日志
 
