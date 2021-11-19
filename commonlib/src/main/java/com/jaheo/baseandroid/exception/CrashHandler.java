@@ -15,7 +15,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Looper;
 import android.os.Process;
 import android.util.Log;
@@ -34,6 +33,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private static CrashHandler sInstance = new CrashHandler();
     private UncaughtExceptionHandler mDefaultCrashHandler;
     private Context mContext;
+    private String errorMsg = "UnKnown Error!";
 
     private CrashHandler() {
     }
@@ -47,6 +47,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
         mContext = context.getApplicationContext();
         errorFilePath = context.getFilesDir() + "/CrashMsg/log/";
+        errorMsg = context.getResources().getString( R.string.unknown_error);
     }
 
     /**
@@ -72,7 +73,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, R.string.unknown_error,Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, errorMsg,Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
         }.start();
@@ -90,7 +91,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
             Process.killProcess(Process.myPid());
         }
     }
-
 
     private void dumpExceptionToSDCard(Throwable ex) throws IOException {
         // 写到 app 私有空间

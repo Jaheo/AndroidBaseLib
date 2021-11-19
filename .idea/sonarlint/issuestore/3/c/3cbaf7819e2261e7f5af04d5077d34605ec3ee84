@@ -1,0 +1,25 @@
+
+6
+java:S5164" Call "remove()" on "dataFormat".(¿­ÏÉ
+U
+java:S1118":Add a private constructor to hide the implicit public one.(þ­†âûÿÿÿÿ
+\
+java:S4065"FReplace this anonymous class with a call to "ThreadLocal.withInitial".(¿­ÏÉ
+]	java:S899Ÿ"BDo something with the "boolean" value returned by "createNewFile".(´¸ö×þÿÿÿÿ
+N
+java:S1128"3Remove this unused import 'android.os.Environment'.(É¿‹Ãûÿÿÿÿ
+O
+java:S1128"9Remove this unused import 'androidx.annotation.Nullable'.(¾Èêš
+e
+java:S1128	"JRemove this unused import 'androidx.annotation.experimental.Experimental'.(ÕŠÓ¨þÿÿÿÿ
+T
+java:S1128"9Remove this unused import 'java.io.BufferedOutputStream'.(«èÍôýÿÿÿÿ
+H
+java:S1128"3Remove this unused import 'java.io.BufferedWriter'.(¬õº/
+J
+java:S1128"5Remove this unused import 'java.io.FileOutputStream'.(˜«ªg
+o
+java:S11927"YDefine a constant instead of duplicating this literal "LogTool.initial() first!" 3 times.(à‚‰È
+s	java:S127Ž"XRefactor the code in order to not assign to this loop counter from within the loop body.(ÐŒøŒúÿÿÿÿ
+_
+java:S2095¡"HUse try-with-resources or close this "FileWriter" in a "finally" clause.(Ù¢®ò

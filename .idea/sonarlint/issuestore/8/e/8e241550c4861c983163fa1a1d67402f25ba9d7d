@@ -1,0 +1,12 @@
+
+L
+java:S26961"6Make the enclosing method "static" or remove this set.(ÌßÚ†
+\	java:S899i"BDo something with the "boolean" value returned by "createNewFile".(Ğ’Íùÿÿÿÿ
+I
+java:S1874~"3Remove this use of "versionCode"; it is deprecated.(õƒ€
+F
+java:S1874"/Remove this use of "CPU_ABI"; it is deprecated.(›ÈÇğ
+D
+java:S1068")Remove this unused "DEBUG" private field.(÷§Ùşÿÿÿÿ
+d
+java:S2095l"IUse try-with-resources or close this "PrintWriter" in a "finally" clause.(÷¡®œşÿÿÿÿ
