@@ -47,7 +47,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
         mContext = context.getApplicationContext();
         errorFilePath = context.getFilesDir() + "/CrashMsg/log/";
-        errorMsg = context.getResources().getString( R.string.unknown_error);
+        // errorMsg = context.getResources().getString( R.string.unknown_error);
     }
 
     /**
